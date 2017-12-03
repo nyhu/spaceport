@@ -1,0 +1,26 @@
+version: "2"
+
+services:
+  python-django-fighter:
+    restart: always
+    image: python-django-fighter
+    build: ./python_django_fighter_repo
+    container_name: python_django_fighter
+    networks:
+      - default
+    volumes:
+      - "./conf.d:/etc/nginx/conf.d"
+      - "./python_django_fighter_repo/media:/app/media"
+      - "./python_django_fighter_repo/db.sqlite3:/app/db.sqlite3"
+    environment:
+      - VIRTUAL_HOST=python_django_fighter.com
+      - VIRTUAL_NETWORK=nginx-proxy
+      - VIRTUAL_PORT=8000
+      - LETSENCRYPT_HOST=python_django_fighter.com
+      - LETSENCRYPT_EMAIL=contact@python_django_fighter.com
+      - IN_DOCKER=1
+
+networks:
+  default:
+    external:
+      name: spatioport_orbit

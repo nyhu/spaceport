@@ -1,0 +1,56 @@
+version: "2"
+
+services:
+  ruby-battle-cruiser:
+    restart: always
+    image: ruby_battle_cruiser
+    build: ./ruby_battle_cruiser_repo
+    container_name: ruby_battle_cruiser
+    links:
+      - postgres-ruby_battle_cruiser
+    depends_on:
+      - postgres-ruby_battle_cruiser
+    volumes:
+      - "./conf.d:/etc/nginx/conf.d"
+      - "./ruby_battle_cruiser_repo/public:/app/public"
+      - "./ruby_battle_cruiser_repo/log:/app/log"
+    volumes_from:
+      - postgres-explorateur
+    environment:
+      - VIRTUAL_HOST=ruby_battle_cruiser.com, www.ruby_battle_cruiser.com
+      - VIRTUAL_NETWORK=nginx-proxy
+      - VIRTUAL_PORT=3000
+      - LETSENCRYPT_HOST=ruby_battle_cruiser.fr, www.ruby_battle_cruiser.fr
+      - LETSENCRYPT_EMAIL=contact@ruby_battle_cruiser.fr
+      - SECRET_KEY_BASE=ruby_battle_cruiser
+      - EXPLORAILS_DATABASE_USERNAME=ruby_battle_cruiser
+      - EXPLORAILS_DATABASE_DATABASE=ruby_battle_cruiser_production
+      - EXPLORAILS_DATABASE_PASSWORD=ruby_battle_cruiser_password
+      - RAILS_SERVE_STATIC_FILES=true
+    networks:
+      - default
+      - backend
+
+  postgres-battle-cruiser:
+    restart: always
+    image: postgres:9.6.1
+    container_name : postgres-battle-cruiser
+    ports:
+      - 5432
+    networks:
+      - backend
+    volumes:
+      # Following is used to make daily backups
+      - "./storage:/var/run/postgresql"
+    environment:
+      - DEBUG=false
+      - POSTGRES_USER=ruby_battle_cruiser
+      - POSTGRES_PASSWORD=ruby_battle_cruiser_password
+      - POSTGRES_DB=ruby_battle_cruiser_production # , another_db if necessary
+
+networks:
+  backend:
+    driver: bridge
+  default:
+    external:
+      name: spatioport_orbit

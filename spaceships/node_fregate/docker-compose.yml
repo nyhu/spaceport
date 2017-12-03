@@ -1,0 +1,57 @@
+version: "2"
+
+services:
+  angular-shield:
+    restart: always
+    image: angular-shield
+    build: ./angular_shield
+    container_name: angular_shield
+    networks:
+      - default
+    volumes:
+      - "./conf.d:/etc/nginx/conf.d"
+      - "./public:/app/src/assets/public"
+    environment:
+      - VIRTUAL_HOST=node_fregate.com, www.node_fregate.com
+      - VIRTUAL_NETWORK=nginx-proxy
+      - VIRTUAL_PORT=80
+      - LETSENCRYPT_HOST=node_fregate.com, www.node_fregate.com
+      - LETSENCRYPT_EMAIL=team@node_fregate.com
+
+  node-fregate:
+    restart: always
+    image: node-fregate
+    build: ./node_fregate_repo
+    container_name: node_fregate
+    networks:
+      - default
+    volumes:
+      - "./conf.d:/etc/nginx.conf.d"
+      - "./public:/app/public"
+    volumes_from:
+      - webtag-mongodb
+    links:
+      - webtag-mongodb
+    depends_on:
+      - webtag-mongodb
+    environment:
+      - VIRTUAL_HOST=backend.node_fregate.com
+      - VIRTUAL_NETWORK=nginx-proxy
+      - VIRTUAL_PORT=3000
+      - LETSENCRYPT_HOST=backend.node_fregate.com
+      - LETSENCRYPT_EMAIL=team@node_fregate.com
+
+  webtag-mongodb:
+    restart: always
+    image: mongo:latest
+    ports:
+      - 27017
+    volumes:
+      - "./storage:/data/db"
+    networks:
+      - default
+
+networks:
+  default:
+    external:
+      name: spatioport_orbit

@@ -1,0 +1,22 @@
+version: "2"
+
+services:
+  golang-consular-ship:
+    restart: always
+    build: https://github.com/nyhu/gomessaging.git
+    container_name: golang_consular_ship
+    volumes:
+      - "./conf.d:/etc/nginx/conf.d"
+    environment:
+      - VIRTUAL_HOST=golang_consular_ship.com
+      - VIRTUAL_NETWORK=nginx-proxy
+      - VIRTUAL_PORT=8000
+      - LETSENCRYPT_HOST=golang_consular_ship.com
+      - LETSENCRYPT_EMAIL=contact@golang_consular_ship.com
+    networks:
+      - default
+
+networks:
+  default:
+    external:
+      name: spatioport_orbit
