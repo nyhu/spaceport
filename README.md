@@ -21,7 +21,7 @@ Some of the configuration are derived from <https://github.com/fatk/docker-letse
 
 ### Running
 
-###### Step one: Spaceport
+#### Step one: Spaceport
 
 In the spaceport run: 
 ```
@@ -35,7 +35,7 @@ This will perform the following steps:
   * *docker-letsencrypt-nginx-proxy-companion* inspects containers' metadata and tries to acquire certificates as needed (if successful then saving them in a volume shared with the host and the Nginx container).
   * *docker-gen* also inspects containers' metadata and generates the configuration file for the main Nginx reverse proxy
 
-###### Step two: Spaceship(s)
+#### Step two: Spaceship(s)
 
 In the spaceship you chose, update conf.d/<your-domain-name>.conf: 
 Modifie domains to match your own.
@@ -50,7 +50,7 @@ docker-compose up
 After a bit, certificates will be created in spaceport/proxy/certs and updated automatically when needed.
 You website is then accessible on https.
 
-###### Optionnal: Gitlab
+#### Optionnal: Gitlab
 
 An optionnal Gitlab setup is given in docks. Feel free to lauch it if you need your personnal git server.
 As for spaceship, you just have to replace user/passwords from some of your choosing and domain name to one pointing on your server. 
