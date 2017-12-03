@@ -1,0 +1,23 @@
+version: "2"
+
+services:
+  html-css-scraps:
+    restart: always
+    image: html-css-scraps
+    build: ./html_css_scraps_repo
+    container_name: html_css_scraps
+    volumes:
+      - "./conf.d:/etc/nginx/conf.d"
+    environment:
+      - VIRTUAL_HOST=html_css_scraps.com, www.html_css_scraps.com
+      - VIRTUAL_NETWORK=nginx-proxy
+      - VIRTUAL_PORT=80
+      - LETSENCRYPT_HOST=html_css_scraps.com, www.html_css_scraps.com
+      - LETSENCRYPT_EMAIL=contact@html_css_scraps.com
+    networks:
+      - default
+
+networks:
+  default:
+    external:
+      name: spatioport_orbit
